@@ -5,9 +5,9 @@ module k_relay_t1 (pout, nout, pin, nin);
 input pin, nin;
 output pout, nout;
 electrical pout, nout, pin, nin;
-parameter real th = 0;                      // Threshold Voltage
-parameter real ron = 0 from [0:inf);        // On resistance
-parameter real goff = 0 from [0:1/(ron+1))  // Off conductance
+parameter real th = 0;                      	// Threshold Voltage
+parameter real ron = 0 from [0:inf);        	// On resistance
+parameter real goff = 0 from [0:1/(ron+1));  	// Off conductance
 branch (pin, nin) in;
 branch (pout, nout) out;
 
