@@ -1,11 +1,11 @@
 `include "disciplines.vams"
 `include "constants.vams"
 
-module k_AAND_t1 (O, I);
-    output O;
-    input [1:0] I;
+module k_AAND_t1 (out, in);
+    output out;
+    input [1:0] in;
     voltage O;
-    voltage I;
+    voltage [1:0] I;
     parameter real vh = 1;                // High level Voltage
     parameter real vl = 0;                // low level Voltage
     parameter real th = (vh+vl)/2;        // switching threshold
@@ -13,8 +13,8 @@ module k_AAND_t1 (O, I);
     parameter real td = 0 from [0:inf);   // transitional delay time
 
     analog begin
-        @(cross(V(I[0])-th) or cross(V(I[1])-th))
+        @(cross(V(in[0])-th) or cross(V(in[1])-th))
             ;
-        V(O) <+ transition(((V(I[0]) > th) && (V(I[1]) > th)) ? vh : vl, id, td);
+        V(out) <+ transition(((V(in[0]) > th) && (V(in[1]) > th)) ? vh : vl, id, td);
     end
 endmodule
