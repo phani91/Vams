@@ -13,15 +13,20 @@ Index:
 	-> Simple Resistor
 	-> Resistor module for both low and high resistances
 	-> Simple Capacitor
-	-> Capacitor module that checks for initial condition
+	-> Capacitor module with min conductance that checks for initial condition
+	-> Simple Inductor
+	-> Inductor with a series resistance
 	-> Series RLC (t1)
 	-> Series RLC (t2)
 	-> Shunt RLC (t1)
 	-> Shunt RLC (t2)
-	-> Constant DC Vdd
+	-> Voltage Source, DC
+	-> Voltage Source, DC+AC
+	-> Voltage Source, DC+AC with a series resistance
 	-> Voltage Follower
 	-> Voltage Follower with level shift
 	-> Current Mirror
 	-> Voltage Amplifier
 	-> Current Amplifier
+	-> 
 	
