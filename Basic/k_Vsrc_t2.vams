@@ -8,6 +8,6 @@ parameter real mag = 1.8;       // AC stimulus magnitude
 branch (p1, p2) src;
 
 analog begin
-    V(dd) <+ dc + ac_stim( "ac", mag );
+    V(src) <+ dc + ac_stim( "ac", mag );
 end
 endmodule
