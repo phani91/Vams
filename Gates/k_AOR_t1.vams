@@ -15,6 +15,6 @@ module k_AOR_t1 (O, I);
     analog begin
         @(cross(V(I[0])-th) or cross(V(I[1])-th))
             ;
-        V(O) <+ transition((V(I[0]) > th) || (V(I[1]) > th) ? vh : vl, id, td);
+        V(O) <+ transition(((V(I[0]) > th) || (V(I[1]) > th)) ? vh : vl, id, td);
     end
 endmodule
