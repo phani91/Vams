@@ -1,0 +1,17 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_ideal_diode_t1 (p1, p2);
+inout p1, p2;
+electrical p1, p2;
+branch (p1, p2) dio;
+
+analog begin
+    @(cross((V(dio)+I(dio)), 0))
+      ;
+    if((V(dio)+I(dio)) > 0)
+        V(dio) <+ 0;
+    else
+        I(dio) <+ 0;
+end
+endmodule    
