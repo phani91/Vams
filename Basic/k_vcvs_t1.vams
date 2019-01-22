@@ -1,0 +1,9 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_vcvs_t1 (pout, nout, pin. nin);
+electrical pout, nout, pin. nin;
+parameter real gain = 1;
+
+analog V(pout,nout) <+ gain*V(pin.nin);
+endmodule
