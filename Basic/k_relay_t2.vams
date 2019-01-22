@@ -1,0 +1,22 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_relay_t2 (pout, nout, pin, nin);
+input pin, nin;
+output pout, nout;
+electrical pout, nout, pin, nin;
+parameter real th = 0;                      // Threshold Voltage
+parameter real ron = 0 from [0:inf);        // On resistance
+parameter real goff = 0 from [0:1/(ron));  // Off conductance
+branch (pin, nin) in;
+branch (pout, nout) out;
+
+analog begin
+    @(cross((V(in)-th, 0))
+        $discontinuity(0);
+    if((V(in) > th)
+        I(out) <+ V(out)/ron;
+    else
+        I(out) <+ goff*V(out);
+end
+endmodule
