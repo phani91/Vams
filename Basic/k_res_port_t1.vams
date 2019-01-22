@@ -1,0 +1,19 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_res_port_t1 (p1, p2);
+inout p1, p2;
+electrical p1, p2;
+parameter real r = 0 from (0:inf);   // Series resistance
+parameter real mag = 0;              // AC stimulus magnitude
+parameter real dc = 0;               // DC stimulus level
+parameter real ampl = 2;             // amplitude
+branch (p1, p2) port1;
+
+analog begin
+    V(port1) <+ r*I(port1);
+    V(port1) <+ ampl*dc;
+    V(port1) <+ ac_stim( "ac", ampl*mag );
+    V(port1) <+ white_noise(4*`P_K*$temperature*r, "thermal");
+end
+endmodule
