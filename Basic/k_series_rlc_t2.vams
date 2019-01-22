@@ -1,0 +1,18 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_series_rlc_t2 (p1, p2);
+electrical p1, p2, n1, n2;
+parameter real r = 10e6;      // Resistance
+parameter real c = 10e-12;    // Capacitance
+parameter real l = 10e-9;     // Inductance
+branch (p1, n1) res;
+branch (n1, n2) ind;
+branch (n2, p2) cap;
+
+analog begin
+    V(res) <+ r*I(res);
+    V(ind) <+ l*ddt(I(ind));
+    I(cap) <+ c*ddt(V(cap));
+end
+endmodule
