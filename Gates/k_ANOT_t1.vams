@@ -1,11 +1,11 @@
 `include "disciplines.vams"
 `include "constants.vams"
 
-module k_ANOT_t1 (O, I);
-    output O;
-    input I;
-    voltage O;
-    voltage I;
+module k_ANOT_t1 (out, in);
+    output out;
+    input in;
+    voltage out;
+    voltage in;
     parameter real vh = 1;                // High level Voltage
     parameter real vl = 0;                // low level Voltage
     parameter real th = (vh+vl)/2;        // switching threshold
@@ -13,8 +13,8 @@ module k_ANOT_t1 (O, I);
     parameter real td = 0 from [0:inf);   // transitional delay time
 
     analog begin
-        @(cross(V(I)-th))
+        @(cross(V(in)-th))
             ;
-        V(O) <+ transition(!(V(I) > th) ? vh : vl, id, td);
+        V(out) <+ transition(!(V(in) > th) ? vh : vl, id, td);
     end
 endmodule
