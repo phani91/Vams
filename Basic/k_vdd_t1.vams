@@ -1,9 +1,0 @@
-`include "disciplines.vams"
-`include "constants.vams"
-
-module k_vdd_t1 (dd);
-electrical dd;
-parameter real dc = 1.8;
-
-analog V(dd) <+ dc;
-endmodule
