@@ -1,0 +1,12 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_Cmirror_t1 (p1, p2);
+input p1;
+output p2;
+Current p1, p2;
+
+analog begin
+    I(p2) <+ -I(p1);
+end
+endmodule
