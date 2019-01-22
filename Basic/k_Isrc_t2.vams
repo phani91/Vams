@@ -1,0 +1,13 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_Isrc_t2 (p1,p2);
+electrical p1,p2;
+parameter real dc = 0;
+parameter real mag = 0;           // AC stimulus magnitude
+parameter real g = 0 from [0:inf);  // series resistance
+branch (p1, p2) src;
+
+analog begin
+    I(src) <+ dc + ac_stim( "ac", mag ) + g*V(src);
+endmodule
