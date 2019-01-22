@@ -1,0 +1,13 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_levshift_Vfollower_t1 (p1, p2);
+input p1;
+output p2;
+parameter real level = 5.0;
+voltage p1, p2;
+
+analog begin
+    V(p2) <+ level + V(p1);
+end
+endmodule
