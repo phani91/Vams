@@ -1,0 +1,14 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_ideal_opamp_t1 (pout, nout, pin, nin);
+input pin, nin;
+output pout, nout;
+electrical pout, nout, pin, nin;
+branch (pout, nout) out;
+branch (pin, nin) in;
+
+analog begin
+    V(out):V(in) == 0;
+end
+endmodule
