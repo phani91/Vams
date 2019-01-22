@@ -1,0 +1,15 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_shunt_rlc_t1 (p1, p2);
+electrical p1, p2;
+parameter real r = 10e6 exclude 0;      // Resistance
+parameter real c = 10e-12 exclude 0;    // Capacitance
+parameter real l = 10e-9;     // Inductance
+
+analog begin
+    I(p1,p2) <+ V(p1,p2)/r;
+    I(p1,p2) <+ c*ddt(V(p1,p2));
+    I(p1,p2) <+ idt(V(p1,p2))/l;
+end
+endmodule
