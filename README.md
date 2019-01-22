@@ -10,10 +10,18 @@ Index:
 	-> Current Controlled Voltage Source
 	-> Voltage Controlled Voltage Source
 	-> Voltage Controlled Current Source
-	-> Resistor
+	-> Simple Resistor
+	-> Resistor module for both low and high resistances
+	-> Simple Capacitor
+	-> Capacitor module that checks for initial condition
 	-> Series RLC (t1)
 	-> Series RLC (t2)
 	-> Shunt RLC (t1)
 	-> Shunt RLC (t2)
 	-> Constant DC Vdd
+	-> Voltage Follower
+	-> Voltage Follower with level shift
+	-> Current Mirror
+	-> Voltage Amplifier
+	-> Current Amplifier
 	
