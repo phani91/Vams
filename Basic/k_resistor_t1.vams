@@ -1,0 +1,10 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_resistor_t1 (p1, p2);
+electrical p1, p2;
+parameter real r = 10e6;
+branch (p1, p2) res;
+
+analog V(res) <+ r*I(res);
+endmodule
