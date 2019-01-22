@@ -1,0 +1,14 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_Iamplifier_t1 (p1, p2);
+input p1;
+output p2;
+Current p1, p2;
+
+parameter real gain = 5.0;
+
+analog begin
+    I(p2) <+ gain*I(p1);
+end
+endmodule
