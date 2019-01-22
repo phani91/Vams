@@ -1,0 +1,20 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_AXOR_t1 (O, I);
+    output O;
+    input [1:0] I;
+    voltage O;
+    voltage I;
+    parameter real vh = 1;                // High level Voltage
+    parameter real vl = 0;                // low level Voltage
+    parameter real th = (vh+vl)/2;        // switching threshold
+    parameter real id = 0 from [0:inf);   // inertial delay time
+    parameter real td = 0 from [0:inf);   // transitional delay time
+
+    analog begin
+        @(cross(V(I[0])-th) or cross(V(I[1])-th))
+            ;
+        V(O) <+ transition(((V(I[0]) > th) ^ (V(I[1]) > th)) ? vh : vl, id, td);
+    end
+endmodule
