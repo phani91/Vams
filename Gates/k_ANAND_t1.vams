@@ -4,8 +4,8 @@
 module k_ANAND_t1 (out, in);
     output out;
     input [1:0] in;
-    voltage O;
-    voltage [1:0] I;
+    voltage out;
+    voltage [1:0] in;
     parameter real vh = 1;                // High level Voltage
     parameter real vl = 0;                // low level Voltage
     parameter real th = (vh+vl)/2;        // switching threshold
