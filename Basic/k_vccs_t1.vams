@@ -1,9 +1,15 @@
 `include "disciplines.vams"
 `include "constants.vams"
 
-module k_vccs_t1 (pout, nout, pin. nin);
-electrical pout, nout, pin. nin;
+module k_vccs_t1 (pout, nout, pin, nin);
+input pin, nin;
+output pout, nout;
+electrical pout, nout, pin, nin;
+branch (pout, nout) out;
+branch (pin, nin) in;
 parameter real gain = 1;
 
-analog V(pout,nout) <+ gain*I(pin.nin);
+analog begin
+	V(pout,nout) <+ gain*I(pin,nin);
+end
 endmodule
