@@ -1,0 +1,20 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_ideal_relay_t1 (pout, nout, pin, nin);
+input pin, nin;
+output pout, nout;
+electrical pout, nout, pin, nin;
+parameter real th = 0;            // Threshold Voltage
+branch (pin, nin) in;
+branch (pout, nout) out;
+
+analog begin
+    @(cross((V(in)-th, 0))
+      ;
+    if((V(in)-th > 0)
+        V(out) <+ 0;
+    else
+        I(out) <+ 0;
+end
+endmodule
