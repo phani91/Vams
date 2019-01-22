@@ -1,0 +1,21 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+// gmin to provide path for DC analysis
+
+module k_cap_t2 (p1, p2);
+inout p1, p2;
+electrical p1, p2;
+parameter real c = 1 from [0:inf);  // Capacitance
+parameter real ic = 0;              // Initial Condition
+parameter real gmin = 1e-12;        // Conductance through branch
+branch (p1, p2) cap;
+
+analog begin
+    if (analysis("ic"))
+        V(cap) <+ ic;
+    else
+        I(cap) <+ c*ddt(V(cap));
+        I(cap) <+ gmin*V(cap);
+end
+endmodule
