@@ -1,0 +1,30 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_AOR_t3 (out, in1, in2, dd);
+    parameter size = 1 from [1:inf);
+    output [size-1:0] out;
+    input [size-1:0] in1, in2;
+    input dd;
+    voltage [size-1:0] out;
+    voltage [size-1:0] in1, in2;
+    voltage dd;
+
+    parameter real th = V(dd)/2;          // switching threshold
+    parameter real id = 0 from [0:inf);   // inertial delay time
+    parameter real td = 0 from [0:inf);   // transitional delay time
+    genvar i;
+    integer level;
+
+    analog begin
+        for(i=0; i<size; i++)
+            @(cross(V(in1[i])-th) or cross(V(in2[i]-th)))
+                ;
+            if((V(in1[i]) > th) || (V(in2[i]) > th))
+                  check = 1;
+            else
+                  check = 0;
+
+            V(out[i]) <+ V(dd)*transition(level, id, td);
+    end
+endmodule
