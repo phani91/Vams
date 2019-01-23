@@ -63,8 +63,8 @@ Index:
 (III). Ff - Folder contains Flipflop models:
 		-> array of n D Flip Flops
 		-> RF model array of n D Flip Flops
-		->
-		->
+		-> array of n T Flip Flops
+		-> RF model array of n T Flip Flops
 		->
 		->
 
