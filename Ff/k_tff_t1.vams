@@ -1,0 +1,43 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_tff_t1 (qp, qn, clk, t, r);
+    parameter size = 1 from [1:inf);
+    output [size-1:0] qp, qn;
+    input clk;
+    input [size-1:0] t, r;
+    voltage [size-1:0] t, r;
+
+    parameter real vh = 1;                  // high state output
+    parameter real vl = -1;                 // low state output
+    parameter real th = (vh+vl)/2;          // input Threshold
+    parameter real td = 0 from [0:inf);     // transitional delay
+    parameter real id = 0 from [0:inf);     // inertial delay
+    parameter integer edge = +1 from [-1:1] exclude 0; // Edge direction
+
+    real [size-1:0] outp, outn;
+    genvar i;
+
+    analog begin
+        for(i=0; i<size; i++)
+            @(initial_step)
+                outp[i] = vl;
+                outn[i] = vh;
+            end
+            @(cross(V(clk) - th, edge)) begin
+                if (V(t[i]) > th) begin
+                    outp[i] = -outp[i];
+                    outn[i] = -outn[i];
+                end else begin
+                    outp[i] = outp[i];
+                    outn[i] = outn[i];
+                end
+            end
+            if (V(r[i]) < th) begin
+                outp[i] = vl;
+                outn[i] = vh;
+            end
+            V(qp[i]) <+ transition(outp[i], id, td);
+            V(qn[i]) <+ transition(outn[i], id, td);
+      end
+endmodule
