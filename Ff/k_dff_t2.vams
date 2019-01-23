@@ -15,7 +15,7 @@ module k_dff_t2 (qp, qn, clk, d, s, r);
     parameter real id = 0 from [0:inf);     // inertial delay
     parameter integer edge = +1 from [-1:1] exclude 0; // Edge direction
     parameter integer[size-1:0] init_state = 0 from [0:1]; // Initial init_state
-    integer [size-1:0] state, act, out;
+    integer [size-1:0] state, act, outp;
 
     genvar i;
 
@@ -33,7 +33,7 @@ module k_dff_t2 (qp, qn, clk, d, s, r);
                     state[i] = ((V(d[i]) > th) && (V(r[i]) < th));
                 end
             end
-            out[i] = idt(0, state[i], act[i]);
+            outp[i] = idt(0, state[i], act[i]);
             V(qp[i]) <+ transition(outp[i] ? vh : vl, id, td);
             V(qn[i]) <+ vl + vh - V(qp[i]);
       end
