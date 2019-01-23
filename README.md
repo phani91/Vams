@@ -52,4 +52,11 @@ Index:
 		-> 2n bit analog XOR gate
 		-> 2n bit analog XNOR gate
 		-> 2n bit analog NOT gate
+		-> 2n bit level sensitive analog OR gate
+		-> 2n bit level sensitive analog NOR gate
+		-> 2n bit level sensitive analog AND gate
+		-> 2n bit level sensitive analog NAND gate
+		-> 2n bit level sensitive analog XOR gate
+		-> 2n bit level sensitive analog XNOR gate
+		-> 2n bit level sensitive analog NOT gate
 
