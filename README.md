@@ -44,15 +44,12 @@ Index:
 		-> 2 bit analog NAND gate
 		-> 2 bit analog XOR gate
 		-> 2 bit analog XNOR gate
+		-> 2 bit analog NOT gate
 		-> 2n bit analog OR gate
 		-> 2n bit analog NOR gate
 		-> 2n bit analog AND gate
 		-> 2n bit analog NAND gate
 		-> 2n bit analog XOR gate
 		-> 2n bit analog XNOR gate
-		-> 2n bit analog OR gate with instantiation
-		-> 2n bit analog NOR gate with instantiation
-		-> 2n bit analog AND gate with instantiation
-		-> 2n bit analog NAND gate with instantiation
-		-> 2n bit analog XOR gate with instantiation
-		-> 2n bit analog XNOR gate with instantiation
+		-> 2n bit analog NOT gate
+
