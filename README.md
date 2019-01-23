@@ -5,7 +5,7 @@ Verilog AMS programs.
 
 Index:
 
-(I). Basic - Folder contains basic analog circuits
+(I). Basic - Folder Contains Basic Analog Circuits:
 		-> Current Controlled Current Source
 		-> Current Controlled Voltage Source
 		-> Voltage Controlled Voltage Source
@@ -37,7 +37,7 @@ Index:
 		-> Non ideal relay with on resistance and off conductance and discontinuity
 		-> Resistive Port with series resistor and added thermal noise
 
-(II). Gates - Folder contains basic analog gates (Working)
+(II). Gates - Folder Contains Basic Analog Gates:
 		-> 2 bit analog OR gate
 		-> 2 bit analog NOR gate
 		-> 2 bit analog AND gate
@@ -59,4 +59,12 @@ Index:
 		-> 2n bit level sensitive analog XOR gate
 		-> 2n bit level sensitive analog XNOR gate
 		-> 2n bit level sensitive analog NOT gate
+
+(III). Ff - Folder contains Flipflop models:
+		-> array of n D Flip Flops
+		-> RF model array of n D Flip Flops
+		->
+		->
+		->
+		->
 
