@@ -1,0 +1,25 @@
+`include "disciplines.vams"
+
+connectmodule k_Elec-Logic_t1 (out, in);
+    input in;
+    electrical in;
+    output out;
+    logic out;
+    reg out;
+
+    parameter real vh = 2.7;        // Minimum voltage of logical high
+    parameter real vl = 0.5;        // Maximum voltage of logical low
+    parameter real cp = 100f;       // Parasitic input capacitance
+
+    always @(above(V(in) - vh )) begin
+        out = 1'b1;
+    end
+
+    always @(above(vl - V(in))) begin
+        out = 1'b0;
+    end
+
+    analog begin
+        I(in) <+ cp*ddt(V(in));
+    end
+endmodule
