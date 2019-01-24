@@ -6,7 +6,7 @@ module k_dff_t2 (qp, qn, clk, t, r);
     output [size-1:0] qp, qn;
     input clk;
     input [size-1:0] t, r;
-    voltage [size-1:0] t, r;
+    voltage [size-1:0] t, r, qp, qn;
 
     parameter real vl = 0;
     parameter real vh = 1 from (vl:inf);
