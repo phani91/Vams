@@ -68,3 +68,8 @@ Index:
 		->
 		->
 
+(IV). DataConverter - Folder contains Data Converters
+		-> n bit DAC
+		-> n bit ADC
+		-? n bit Quantizer
+
