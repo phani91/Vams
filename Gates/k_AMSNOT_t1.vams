@@ -1,0 +1,10 @@
+`include "disciplines.vams"
+`timescale 1ns/1ps
+
+module k_AMSNOT_t1 (out, in);
+input in;
+output out;
+logic in, out;
+
+assign out = ~in;
+endmodule
