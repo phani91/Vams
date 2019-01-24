@@ -20,8 +20,8 @@ module k_dff_t1 (qp, qn, clk, d, s, r);
     genvar i;
 
     analog begin
-        for(i=0; i<size; i++)
-            @(initial_step)
+        for(i=0; i<size; i=i+1) begin
+            @(initial_step) begin
                 outp[i] = vl;
                 outn[i] = vh;
             end
@@ -46,5 +46,6 @@ module k_dff_t1 (qp, qn, clk, d, s, r);
             tempn = outn[i];
             V(qp[i]) <+ transition( tempp, id, td);
             V(qn[i]) <+ transition( tempn, id, td);
+        end
       end
 endmodule
