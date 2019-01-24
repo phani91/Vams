@@ -1,0 +1,40 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_nADC_t1 (dout, clk, ain);
+    parameter integer resol = 8 from [1:64];
+    input clk;
+    voltage clk;
+    input ain;
+    voltage ain;
+    output [resol-1:0] dout;
+    voltage [resol-1:0] dout;
+
+    parameter real fullscale = 1.0;
+    parameter real lev = fullscale/2.0;
+    parameter real dd = 5.0;
+    parameter real th = dd/2.0;
+    parameter real id = 0 from [0:inf);
+    parameter real td = 10n from [0:inf);
+    parameter integer edg = +1 from [-1:1] exclude 0;
+
+    real sample;
+    integer out[resol-1:0];
+    genvar i;
+
+    analog begin
+        @(initial_step or cross(V(clk) - th, edg)) begin
+            sample = V(ain);
+            for (i = resol-1; i <= 0; i = i-1) begin
+                if (sample > lev) begin
+                    out[i] = 1;
+                    sample = sample-lev;
+                end else begin
+                    out[i] = 0;
+                end
+                sample = 2.0*sample;
+            end
+        end
+        V(aout) <+ transition( out, id, td);
+    end
+    endmodule
