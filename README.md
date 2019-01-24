@@ -36,6 +36,7 @@ Index:
 		-> Non ideal relay with on resistance and off conductance
 		-> Non ideal relay with on resistance and off conductance and discontinuity
 		-> Resistive Port with series resistor and added thermal noise
+		-> Simple Clock Generator Module
 
 (II). Gates - Folder Contains Basic Analog Gates:
 		-> Simple Inverter
