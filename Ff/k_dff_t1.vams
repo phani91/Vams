@@ -6,7 +6,7 @@ module k_dff_t1 (qp, qn, clk, d, s, r);
     output [size-1:0] qp, qn;
     input clk;
     input [size-1:0] d, s, r;
-    voltage [size-1:0] d, s, r;
+    voltage [size-1:0] d, s, r, qp, qn;
 
     parameter real vh = 1;                  // high state output
     parameter real vl = -1;                 // low state output
@@ -42,8 +42,6 @@ module k_dff_t1 (qp, qn, clk, d, s, r);
                 outp[i] = vl;
                 outn[i] = vh;
             end
-            tempp = outp[i];
-            tempn = outn[i];
             V(qp[i]) <+ transition( tempp, id, td);
             V(qn[i]) <+ transition( tempn, id, td);
         end
