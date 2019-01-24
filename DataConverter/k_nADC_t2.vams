@@ -1,0 +1,37 @@
+`include "disciplines.vams"
+`include "constants.vams"
+`timescale 1ns/1ps
+
+module k_nADC_t2 (dout, clk, ain);
+    parameter integer resol = 8 from [1:64];
+    input clk;
+    logic clk;
+    input ain;
+    voltage ain;
+    output [0:resol-1] dout;
+    reg [0:resol-1] dout;
+
+    parameter real fullscale = 1.0;
+    parameter real lev = fullscale/2.0;
+    parameter real id = 0 from [0:inf);
+    parameter real td = 10n from [0:inf);
+    parameter integer edg = +1 from [-1:1] exclude 0;
+
+    real sample;
+    reg [0:resol-1] check;
+    genvar i;
+
+    always @(posedge clk) begin
+        sample = V(in);
+        for (i = resol-1; i >= 0; i = i-1) begin
+            if (sample > lev) begin
+                check[i] = 1;
+                sample = sample - lev;
+            end else begin
+                check[i] = 0;
+            end
+            sample = 2.0*sample;
+        end
+    end
+    dout <= #(td) check;
+    endmodule
