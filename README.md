@@ -71,5 +71,8 @@ Index:
 (IV). DataConverter - Folder contains Data Converters
 		-> n bit DAC
 		-> n bit ADC
-		-? n bit Quantizer
+		-> n bit Quantizer
+		-> n bit DAC, AMS model
+		-> n bit ADC, AMS model
+		-> 
 
