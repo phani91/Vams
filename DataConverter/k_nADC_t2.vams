@@ -19,7 +19,7 @@ module k_nADC_t2 (dout, clk, ain);
 
     real sample;
     reg [0:resol-1] check;
-    genvar i;
+    integer i;
 
     always @(posedge clk) begin
         sample = V(in);
