@@ -6,7 +6,7 @@ module k_tff_t1 (qp, qn, clk, t, r);
     output [size-1:0] qp, qn;
     input clk;
     input [size-1:0] t, r;
-    voltage [size-1:0] t, r;
+    voltage [size-1:0] t, r, qp, qn;
 
     parameter real vh = 1;                  // high state output
     parameter real vl = -1;                 // low state output
