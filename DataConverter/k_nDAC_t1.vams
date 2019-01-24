@@ -1,0 +1,39 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_nDAC_t1 (aout, clk, din);
+  parameter integer resol = 8 from [1:64];
+  input clk;
+  voltage clk;
+  input [resol-1:0] din;
+  voltage [resol-1:0] din;
+  output aout;
+  voltage aout;
+
+  parameter real fullscale = 1.0;
+  parameter real dd = 5.0;
+  parameter real th = dd/2;
+  parameter real id = 0 from [0:inf);
+  parameter real td = 0 from [0:inf);
+  parameter integer edg = +1 from [-1:1] exclude 0;
+
+  integer weight;
+  real out;
+  real sample[resol-1:0];
+  genvar i;
+
+  analog begin
+      @(initial_step or cross(V(clk) - th, edg)) begin
+          sample = V(din);
+          weight = 2;
+          out = 0;
+          for (i = resol-1; i >= 0; i=i-1) begin
+              if (sample[i] > th) begin
+                  out = out + fullscale/weight;
+              end
+              weight = weight*2;
+          end
+      end
+      V(aout) <+ transition( out, td, id);
+  end
+  endmodule
