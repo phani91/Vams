@@ -7,7 +7,7 @@ module k_nDAC_t2 (aout, clk, din);
   input clk;
   logic clk;
   input [0:resol-1] din;
-  logic din;
+  logic [0:resol-1] din;
   output aout;
   wreal aout;
 
