@@ -1,0 +1,51 @@
+`include "disciplines.vams"
+`timescale 1ns/1ps
+
+connectmodule k_Elec-Logic_t1 (out, in);
+    input in;
+    electrical in;
+    output out;
+    logic out;
+    reg out;
+
+    parameter real vh = 2.7;        // Minimum voltage of logical high
+    parameter real vl = 0.5;        // Maximum voltage of logical low
+    parameter real cp = 100f;       // Parasitic input capacitance
+    parameter real xtd = 1n;        // time in x region before x is produced
+    parameter real dv = 0.2;        // Voltage between x region and threshold
+
+    parameter real vhx = vh - dv;
+    parameter real vlx = vl + dv;
+    reg xreg;
+
+    initial xreg = 0;
+
+    always @(above(V(in) - vh )) begin
+        out = 1'b1;
+        xreg = 0;
+    end
+
+    always @(above(vl - V(in))) begin
+        out = 1'b0;
+        xreg = 0;
+    end
+
+    always @(above(vhx - V(in))) begin
+        xreg = 1;
+    end
+
+    always @(above(V(in) - vlx)) begin
+        xreg = 1;
+    end
+
+    always @(posedge xreg) begin : xreg_delay
+        #(dt/1.0n) out = 1'bx;
+        xreg = 0;
+    end
+
+    always @(negedge xreg) disable xreg_delay;
+
+    analog begin
+        I(in) <+ cp*ddt(V(in));
+    end
+endmodule
