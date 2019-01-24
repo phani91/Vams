@@ -1,0 +1,48 @@
+`include "disciplines.vams"
+`timescale 1ns/1ps
+
+module k_Dig-Ana_t1.vams (out, in);
+    input in;
+    logic in;
+    output out;
+    electrical out;
+
+    parameter real vl = 0.0;                 // low level Voltage
+    parameter real vh = 5.0;                 // high level voltage
+    parameter real vx = 2.5;                 // x region Voltage
+    parameter real vz = 5.0;                 // Z value Voltage
+    parameter real rl = 1k from (0:inf);     // output resistance for 0 output
+    parameter real rh = 1k from (0:inf);     // output resistance for 0 output
+    parameter real rx = 100 from (0:inf);    // output resistance for 0 output
+    parameter real rz = 1M from (0:inf);     // output resistance for 0 output
+    parameter real tr = 1n from [0:inf);     // rise time
+    parameter real tf = 1n from [0:inf);     // fall time
+
+    real v, r;
+    reg buff;
+
+    assign buff = in;
+
+    initial begin
+        case (buff)
+            1'b0 : begin v = vl; r = rl; end
+            1'b1 : begin v = vh; r = rh; end
+            1'bx : begin v = vx; r = rx; end
+            1'bz : begin v = vz; r = rz; end
+        endcase
+    end
+
+    always @(buff) begin
+        case (buff)
+            1'b0 : begin v = vl; r = rl; end
+            1'b1 : begin v = vh; r = rh; end
+            1'bx : begin v = vx; r = rx; end
+            1'bz : begin v = vz; r = rz; end
+        endcase
+    end
+
+    analog begin
+        V(out) <+ transition( v, 0, tr, tf);
+        V(out) <+ transition( r, 0, tr, tf)*I(out);
+    end
+endmodule
