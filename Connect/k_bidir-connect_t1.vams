@@ -1,0 +1,113 @@
+`include "disciplines.vams"
+`timescale 1ns/1ps
+
+module k_bidir-connect_t1.vams (d, a);
+    inout a;
+    electrical a;
+    inout d;
+    logic d;
+
+    parameter real vl = 0.0;                 // low level Voltage
+    parameter real vh = 5.0;                 // high level voltage
+    parameter real vx = 2.5;                 // x region Voltage
+    parameter real vz = 5.0;                 // Z value Voltage
+    parameter real rl = 1k from (0:inf);     // output resistance for 0 output
+    parameter real rh = 1k from (0:inf);     // output resistance for 0 output
+    parameter real rx = 100 from (0:inf);    // output resistance for 0 output
+    parameter real rz = 1M from (0:inf);     // output resistance for 0 output
+    parameter real tr = 1n from [0:inf);     // rise time
+    parameter real tf = 1n from [0:inf);     // fall time
+    parameter real vlmax = 0.5;              // Max voltage of 0 state
+    parameter real vhmin = 2.7;              // Min voltage of 1 state
+    parameter real zimax = 0.1u;             // Max impedance state current
+    parameter real xtd = 1;                  // time in x region before x is produced
+    parameter real ztd = 0.5*xtd;            // time when current > zimax
+                                             // before exiting z state
+
+    logic dout;
+    reg dout;
+    reg istate, xreg, zreg;
+
+    real v, r;
+    integer vstate;
+
+    assign d = dout;
+
+    initial begin
+        dout = 1'bz;
+        vstate = 2;
+        istate = 0;
+        xreg = 0;
+        zreg = 0;
+
+        case (d)
+            1'b0 : begin v = vl; r = rl; end
+            1'b1 : begin v = vh; r = rh; end
+            1'bx : begin v = vx; r = rx; dout = 1'bx; end
+            1'bz : begin v = vz; r = rz; end
+        endcase
+    end
+
+    always @(d) begin
+        case (d)
+            1'b0 : begin v = vl; r = rl; end
+            1'b1 : begin v = vh; r = rh; end
+            1'bx : begin v = vx; r = rx; dout = 1'bx; end
+            1'bz : begin v = vz; r = rz; end
+        endcase
+    end
+
+    always @(above(V(a) - vhmin)) begin
+        vstate = 1;
+        xreg = 0;
+    end
+
+    always @(above(vhmin - V(a))) begin
+        xreg = 1;
+    end
+
+    always @(above(V(a) - vlmax)) begin
+        xreg = 1;
+    end
+
+    always @(above(vlmax - V(a))) begin
+        vstate = 3;
+        xreg = 0;
+    end
+
+    always @(posedge xreg) begin : xreg_delay
+        #(xtd) vstate = 2;
+        xreg = 0;
+    end
+
+    always @(negedge xreg) disable xreg_delay;
+
+    always @(posedge zreg) begin : zreg_delay
+        #(ztd) istate = 1;
+        zreg = 0;
+    end
+
+    always @(negedge zreg) disable zreg_delay;
+
+    always @(above(abs(I(a)) - zimax)) begin
+        zreg = 1;
+    end
+
+    always @(above(zimax - abs(I(a)))) begin
+        istate = 0;
+        zreg = 0;
+    end
+
+    always @(vstate or istate or d) begin
+        case(vstate)
+            1 : dout = (d === 1'bx) ? 1'bx : 1'b1;
+            2 : dout = ((istate === 1'b0) && (d === 1'bz)) ? 1'bz : 1'bx;
+            3 : dout = (d === 1'bx) ? 1'bx : 1'b0;
+        endcase
+    end
+
+    analog begin
+        V(a) <+ transition( v, 0, tr, td);
+        V(a) <+ transition( r, o, tr, td)*I(a);
+    end
+    endmodule
