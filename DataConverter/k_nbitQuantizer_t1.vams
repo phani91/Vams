@@ -1,0 +1,34 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_nbitQuantizer_t1(qout,clk,ain);
+    input clk, ain;
+    voltage clk, ain;
+    output qout;
+    voltage qout;
+    parameter integer resol = 8 from [0:inf);
+    parameter integer levels = pow(2,resol) from [1:inf);
+    parameter real vh = +1;                 // Voltage of highest level
+    parameter real vl = -1 from (-inf:vh);  // Voltage of lowest level
+    parameter real th = (vl+vh)/2;
+    parameter real td = 0 from [0:inf);
+    parameter real id = 0 from [0:inf);
+    parameter integer edg = +1 from [-1:1] exclude 0;
+
+    real delta, quant;
+    integer level;
+
+    analog begin
+        @(initial_step or cross(V(clk) - th, edg)) begin
+            delta = ((vh-vl)/(levels-1));
+            level = ((V(ain)-vl)/delta);
+            if  (level < 0) begin
+                level = 0;
+            end else if (level > levels) begin
+                level = levels-1;
+            end
+            quant = level*delta + vl;
+        end
+        V(qout) <+ transition (quant, td, id);
+    end
+    endmodule
