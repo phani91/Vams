@@ -38,6 +38,7 @@ Index:
 		-> Resistive Port with series resistor and added thermal noise
 
 (II). Gates - Folder Contains Basic Analog Gates:
+		-> Simple Inverter
 		-> 2 bit analog OR gate
 		-> 2 bit analog NOR gate
 		-> 2 bit analog AND gate
@@ -74,5 +75,12 @@ Index:
 		-> n bit Quantizer
 		-> n bit DAC, AMS model
 		-> n bit ADC, AMS model
-		-> 
+		
+(V). Connect - Folder contains connect modules
+		-> Electrical to Logic connect module just for 0,1 states
+		-> Electrical to Logic connect module for 0,1,X,Z states
+		-> Digital to Analog connect module for 0,1,X,Z states
+		-> Bidirectional connect module for 0,1,X,Z states
+		-> Enhanced Bidirectional connect module for 0,1,X,Z states
+		->
 
