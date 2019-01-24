@@ -4,7 +4,7 @@
 module k_AMSNOT_t1 (out, in);
 input in;
 output out;
-wire in, out;
+logic in, out;
 
 assign out = ~in;
 endmodule
