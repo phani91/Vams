@@ -1,0 +1,12 @@
+`include "disciplines.vams"
+`timescale 1ns/1ps
+
+module k_clkgen_t1 (clk);
+    parameter cycle = 10;
+    output clk;
+    reg clk;
+
+    initial clk = 0;
+
+    always #(cycle/2) clk = ~clk;
+endmodule
