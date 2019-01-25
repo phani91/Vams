@@ -35,6 +35,7 @@ Index:
 		-> Ideal Relay
 		-> Non ideal relay with on resistance and off conductance
 		-> Non ideal relay with on resistance and off conductance and discontinuity
+		-> Digitally controlled non ideal relay, AMS model
 		-> Resistive Port with series resistor and added thermal noise
 		-> Simple Clock Generator Module
 
@@ -84,4 +85,46 @@ Index:
 		-> Bidirectional connect module for 0,1,X,Z states
 		-> Enhanced Bidirectional connect module for 0,1,X,Z states
 		->
+		
+(VI). Frequency - Folder contains frequency based models
+		->
+		->
+		->
+		->
+		->
+		
+(VII). Oscillator - Folder contains oscillator modules
+		->
+		->
+		->
+		->
+		->
+		
+(VIII). Modulator - Folder contains modulator modules
+		->
+		->
+		->
+		->
+		
+(IX). Semiconductor - Folder contains semiconductor modules
+		->
+		->
+		->
+		->
+		->
+		->
+		->
+		->
+		->
+		->
+		
+(X). Other - Folder contains other modules
+		->
+		->
+		->
+		->
+		->
+		->
+		
+(XI). Memristor - Folder contains Memristor modules
 
