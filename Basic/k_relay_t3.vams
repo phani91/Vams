@@ -1,0 +1,36 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_relay_t3 (p1, p2, sel);
+    input sel;
+    logic sel;
+    output p1, p2;
+    electrical p1, p2;
+    branch (p1, p2) out;
+
+    parameter real ron = 100.0 from (0:inf);        // On resistance
+    parameter real roff = 100.0M from (0:1/(ron));  // Off resistance
+    parameter real gon = 1.0/ron;                   // On conductance
+    parameter real goff = 1.0/roff;                 // off conductance
+    parameter real id = 0.0 from [0:inf);           // delay
+    parameter real tr = 1.0n from [0:inf);          // rise time
+    parameter real tf = 1.0n from [0:inf);          // fall time
+
+    real geff;
+
+    analog begin
+        @(posedge sel) begin
+            geff = gon;
+        end
+
+        @(negedge sel) begin
+            geff = goff;
+        end
+
+        @(initial_step) begin
+            geff = (sel ? gon : goff);
+        end
+
+        I(out) <+ V(out)*transition( geff, id, tr, tf);
+    end
+    endmodule
