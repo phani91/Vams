@@ -8,7 +8,7 @@ parameter real r = 1;
 branch (p1, p2) res;
 
 analog begin
-    if (r > 1e12*res.flow.abstol)
+    if (r > 1e12*k_resistor_t2.flow.abstol)
         I(res) <+ V(res)/r;
     else
         V(res) <+ r*I(res);
