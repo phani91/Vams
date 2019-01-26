@@ -3,6 +3,7 @@
 
 module k_skineffect_t1 (p1, p2);
     electrical p1, p2;
+//    inout p1, p2;
     branch (p1,p2) box;
 
     parameter real esr = 1 from (0:inf);        // External Series Resistance
@@ -18,12 +19,17 @@ module k_skineffect_t1 (p1, p2);
 
     analog begin
         @(initial_step("static")) begin
-            $strobe("f0 = %f, f1 = %f, esr = %f\n", f0, f1, esr);
+            $strobe("lumps = %d, f0 = %f, f1 = %f, esr = %f\n", lumps, f0, f1, esr);
             m = pow(fr, 1.0/lumps);             // frequency span of each lump
-            for (i = 0; i < lumps; i = i+1) begin
-                zeroes[i] = f0*pow(m, (i - (3.0/4.0)));
-                poles[i] = f0*pow(m, (i-(1.0/4.0)));
-                $strobe("zero[%d] = %f, pole[%d] = %f\n", i, zeroes[i], poles[i]);
+            for (i = 0; i < 2*lumps; i = i+1) begin
+                if (i%2 == 0) begin
+                    zeroes[i] = (f0*pow(m, (i - (3.0/4.0))));
+                    poles[i] = (f0*pow(m, (i-(1.0/4.0))));
+                end else begin
+                    zeroes[i] = 0;
+                    poles[i] = 0;
+                end
+                $strobe("zero[%d] = %f, pole[%d] = %f\n", i, zeroes[i], i, poles[i]);
             end
         end
         V(box) <+ esr*laplace_zp( I(box), zeroes, poles);
