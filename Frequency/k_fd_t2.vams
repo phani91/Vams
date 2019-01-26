@@ -1,0 +1,39 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_fd_t1 (vout, vin);
+    output vout;
+    input vin;
+
+    voltage vout, vin;
+    parameter real vh = +1;           // input voltage in high state
+    parameter real vl = -1;           // input voltage in low state
+    parameter real th = (vh+vl)/2;    // input threshold voltage
+    parameter integer edg = +1 from [-1:1] exclude 0;
+    parameter real id = 0 from [0:inf);       // Average delay from input to output
+    parameter real td = 1n from (0:inf);      // transitional delay
+    parameter integer ratio = 2 from [2:inf); // Frequency divide ratio
+    parameter real jitter = 0 from [0:td/5);  // White jitter
+    parameter real ttol = 1p from (0:td/5);   // time tolerance
+
+    integer count, trig, seed, dist_mean, dist_sd;
+    real delta;
+
+    analog begin
+        @(initial_step) begin
+            seed = -789;
+            dist_mean = 0;
+            dist_sd = 1;
+        end
+        @(cross(V(vin) - th, edg, ttol)) begin
+            count = count + 1;
+            if (count >= ratio) begin
+                count = 0;
+            end
+            trig = (2*count >= ratio);
+            delta = jitter*$rdist_normal(seed, dist_mean, dist_sd);
+        end
+
+        V(vout) <+ transition( n ? vh : vl, id+delta, td);
+    end
+endmodule
