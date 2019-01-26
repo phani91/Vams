@@ -3,6 +3,7 @@
 
 module k_skineffect_t1 (p1, p2);
     electrical p1, p2;
+    inout p1, p2;
     branch (p1,p2) box;
 
     parameter real esr = 1 from (0:inf);        // External Series Resistance
