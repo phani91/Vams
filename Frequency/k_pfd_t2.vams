@@ -34,7 +34,7 @@ module k_pfd_t2 (iout, vref, vinv);
         @cross(V(vref) - th, edg, ttol) begin
             if (state > -1) begin
                 state = state - 1;
-                delta = jitter*$rdist_normal(seed, dist_mena, dist_sd);
+                delta = jitter*$rdist_normal(seed, dist_mean, dist_sd);
             end
         end
         @cross(V(vinv) - th, edg, ttol) begin
