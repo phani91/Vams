@@ -2,7 +2,7 @@
 `include "constants.vams"
 
 module k_ind_t2 (p1, p2);
-inout p1, p2;
+//inout p1, p2;
 electrical p1, p2;
 parameter real l = 1 from [0:inf);
 parameter real r = 0 from [0:inf); // Parasitic Resistance
