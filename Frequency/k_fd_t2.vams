@@ -34,6 +34,6 @@ module k_fd_t1 (vout, vin);
             delta = jitter*$rdist_normal(seed, dist_mean, dist_sd);
         end
 
-        V(vout) <+ transition( n ? vh : vl, id+delta, td);
+        V(vout) <+ transition( trig ? vh : vl, id+delta, td);
     end
 endmodule
