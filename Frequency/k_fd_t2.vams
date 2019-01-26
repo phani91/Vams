@@ -1,7 +1,7 @@
 `include "disciplines.vams"
 `include "constants.vams"
 
-module k_fd_t1 (vout, vin);
+module k_fd_t2 (vout, vin);
     output vout;
     input vin;
 
