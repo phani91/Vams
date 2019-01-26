@@ -23,7 +23,7 @@ module k_lossyind_t1 (p1, p2);
 
     k_resistor_t2 #(.r(rp)) RP (p2, n2);
     k_skineffect_t1 #(.esr(esr), .f0(2*esr*esr*h*h),
-                        .f1(1.0/(2*`M_PI*SQRT(l*cp)))) HR (p1, n1);
+                        .f1(1.0/(2*`M_PI*sqrt(l*cp)))) HR (p1, n1);
     k_cap_t2 #(.c(cp)) CP (p1, n2);
     k_ind_t2 #(.l(l)) L (n1, p2);
 endmodule
