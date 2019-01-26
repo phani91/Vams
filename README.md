@@ -38,6 +38,9 @@ Index:
 		-> Digitally controlled non ideal relay, AMS model
 		-> Resistive Port with series resistor and added thermal noise
 		-> Simple Clock Generator Module
+		-> Lossy Inductor
+		-> Skin Effect module for lossy inductor
+		-> Lossy Inductor with ac current stimulus
 
 (II). Gates - Folder Contains Basic Analog Gates:
 		-> Simple Inverter
