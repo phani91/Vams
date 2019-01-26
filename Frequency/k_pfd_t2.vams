@@ -1,0 +1,62 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_pfd_t2 (iout, vref, vinv);
+    output iout;                      // Output Current
+    electrical iout;
+    input vref;                       // Input positive voltage
+    input vinv;                       // Input inverted voltage
+    voltage vref, vinv;
+
+    parameter real imax = 100u;       // maximum output Current
+    parameter real vh = +1;           // input voltage in high state
+    parameter real vl = -1;           // input voltage in low state
+    parameter real th = (vh+vl)/2;    // input threshold voltage
+    parameter integer edg = +1 from [-1:1] exclude 0;
+    parameter real id = 0 from [0:inf);       // Average delay from input to output
+    parameter real td = 1n from (0:inf);      // transitional delay
+    parameter real jitter = 0 from [0:td/5);  // White jitter
+    parameter real ttol = 1p from (0:td/5);   // time tolerance
+    parameter real rclamp = 100 from (0:inf); // output clamp resistance
+    parameter real gmin = 1p;                 // output min conductance
+
+    integer state, seed, dist_mean, dist_sd;
+    real delta;
+
+    analog begin
+        @(initial_step) begin
+            seed = 789;
+            dist_mean = 0;
+            dist_sd = 1;
+        end
+
+        // Phase detector
+        @cross(V(vref) - th, edg, ttol) begin
+            if (state > -1) begin
+                state = state - 1;
+                delta = jitter*$rdist_normal(seed, dist_mena, dist_sd);
+            end
+        end
+        @cross(V(vinv) - th, edg, ttol) begin
+            if (state < 1) begin
+                state = state + 1;
+                delta = jitter*$rdist_normal(seed, dist_mean, dist_sd);
+            end
+        end
+        // End Phase detector
+
+        // Charge Pump
+        I(iout) <+ transition( iout*state, id+delta, td);
+        // End Charge Pump
+
+        // Output Clamp
+        if (V(iout) > vh) begin
+            I(iout) <+ (V(iout) - vh)/rclamp;
+        end else if (V(iout) < vl) begin
+            I(iout) <+ (V(iout) - vl)/rclamp;
+        end
+        // End Output Clamp
+
+        I(iout) <+ gmin*V(iout);
+    end
+endmodule
