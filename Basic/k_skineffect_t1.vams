@@ -1,7 +1,7 @@
 `include "disciplines.vams"
 `include "constants.vams"
 
-module k_skin-effect_t1 (p1, p2);
+module k_skineffect_t1 (p1, p2);
     electrical p1, p2;
     branch (p1,p2) box;
 
