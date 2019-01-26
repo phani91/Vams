@@ -21,7 +21,7 @@ module k_skineffect_t1 (p1, p2);
         @(initial_step("static")) begin
             $strobe("lumps = %d, f0 = %f, f1 = %f, esr = %f\n", lumps, f0, f1, esr);
             m = pow(fr, 1.0/lumps);             // frequency span of each lump
-            for (i = 0; i < lumps; i = i+1) begin
+            for (i = 0; i < 2*lumps; i = i+1) begin
                 if (i%2 == 0) begin
                     zeroes[i] = -(f0*pow(m, (i - (3.0/4.0))));
                     poles[i] = -(f0*pow(m, (i-(1.0/4.0))));
