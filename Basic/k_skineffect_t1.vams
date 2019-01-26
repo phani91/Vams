@@ -24,7 +24,7 @@ module k_skineffect_t1 (p1, p2);
             for (i = 0; i < lumps; i = i+1) begin
                 zeroes[i] = f0*pow(m, (i - (3.0/4.0)));
                 poles[i] = f0*pow(m, (i-(1.0/4.0)));
-                $strobe("zero[%d] = %f, pole[%d] = %f\n", i, zeroes[i], poles[i]);
+                $strobe("zero[%d] = %f, pole[%d] = %f\n", i, zeroes[i], i, poles[i]);
             end
         end
         V(box) <+ esr*laplace_zp( I(box), zeroes, poles);
