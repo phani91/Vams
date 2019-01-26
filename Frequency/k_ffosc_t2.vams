@@ -1,0 +1,45 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_ffosc_t2 (out);
+    output out;
+    voltage out;
+
+    parameter real freq = 1 from (0:inf);       // output signal frequency
+    parameter real vh = +1;                     // input voltage in high state
+    parameter real vl = -1;                     // input voltage in low state
+    parameter real th = (vh+vl)/2;              // input threshold voltage
+    parameter real id = 0 from [0:inf);         // Average delay input-output
+    parameter real td = 0.01/freq from (0:inf); // transitional delay
+    parameter real a_jitter = 0 from [0:td/5);  // White accumulating jitter
+    parameter real s_jitter = 0 from [0:td/5);  // White synchronous jitter
+    parameter real ttol = 1p from (0:td/5);     // time tolerance
+
+    integer n;
+    integer a_s, s_s, a_m, a_sd, s_m, s_sd;
+    real next, incr, async_delta, sync_delta, async_jitter, sync_jitter;
+
+    analog begin
+        @(initial_step) begin
+            a_s = -769;
+            s_s = 289;
+            a_m = 0;
+            a_sd = 1;
+            s_m = 0;
+            s_sd = 1;
+            async_jitter = `M_SQRT1_2*a_jitter;
+            sync_jitter = s_jitter;
+            incr = 0.5/freq;
+            next = incr + $abstime;
+        end
+
+        @(timer(next + sync_delta, ,ttol)) begin
+            n = !n;
+            async_delta = async_jitter*$rdist_normal(a_s, a_m, a_sd);
+            sync_delta = sync_jitter*$rdist_normal(s_s, s_m, s_sd)
+            next = next + incr + period_delta;
+        end
+
+        V(out) <+ transition( n ? vh : vl, id, td);
+    end
+endmodule

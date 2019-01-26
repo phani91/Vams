@@ -1,0 +1,78 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_fd_t3 (pout, nout, pin, nin);
+    output pout, nout;
+    input pin, nin;
+    electrical pin, nin, pout, nout;
+
+    electrical vg, chg, hold;
+    branch (pin, nin) in;
+    branch (pout, nout) out;
+
+    parameter integer n = 2 from [2:inf);     // Frequency Divide Ratio
+    parameter integer nhi = 1 from [1:n-1];   // hi counts per output pulse
+    parameter integer edg = +1 from [-1:1] exclude 0;
+    parameter real vdd = 5.0;                 // output high level
+    parameter real vss = 0.0;                 // output low level
+    parameter real th = (vdd+vss)/2;          // input threshold
+    parameter real id = 0 from [0:inf);       // Average delay, input to output
+    parameter real td = 0.01;                 // transitional delay
+    parameter real jitter = 0 from [0:td/5);  // White jitter
+    parameter real ttol = 1p from (0:td/5);   // time tolerance
+
+    real vmax;
+    integer vout, count, seed, dist_mean, dist_sd;
+    real g, vchg, delta;
+
+    analog begin
+        vmax = max(abs(vdd), abs(vss));
+        g = 5*ln(n);
+        @(initial_step) begin
+            seed = -789;
+            dist_mean = 0;
+            dist_sd = 1;
+        end
+        @cross(V(in) - th, 0, ttol);
+
+        // hold capacitor with capacitance for td
+        I(vg,hold) <+ td*ddt(V(vg,hold));
+
+        // clamp hold capacitor during static analysis
+        if(analysis("static")) begin
+            I(vg,hold) <+ V(vg,hold);
+        end
+
+        // ideal op-amp
+        V(hold):V(vg) == 0;
+
+        // titrating capacitor with capacitance for td
+        I(vg,chg) <+ td*ddt(V(vg,chg));
+
+        // titrating capacitor is pre-charged for high Input
+        if((V(hold) < vmax*(1.5/n-1)) && (edg*V(in) < edg*th)) begin
+            vchg = V(hold);             // reset hold capacitor
+        end else begin
+            vchg = vmax/n;              // precharge hold capacitor to vmax/n
+        end
+
+        // determining count
+        count = -n*V(hold)/vmax;
+
+        // Charge/discharge upon high input through g siemen switches
+        if(edg*V(in) > edg*th) begin
+            // dumping titrating capacitor onto hold capacitor
+            I(vg,chg) <+ g*V(vg,chg);
+        end else begin
+            // precharge titrating capacitor
+            I(chg) <+ g*(V(chg) - vchg);
+            // using discrete level feedback to correct errors in hold cap
+            I(vg) <+ -n*(V(hold)/vmax) - count;
+        end
+
+        // output pulse when V(in) is high, V(hold) < th
+        vout = (count >= (n - nhi));
+        delta = jitter*$rdist_normal(seed, dist_mean, dist_sd);
+        V(out) <+ transition( vss + vout*(vdd-vss), id+delta, td, td);
+    end
+endmodule
