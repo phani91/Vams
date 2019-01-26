@@ -1,0 +1,9 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_top_lossyind_t1 (p1, p2);
+    electrical p1, p2;
+
+    k_Isrc_t2 #(.mag(1)) SRC (p1, p2);
+    k_lossyind_t1 #(.esr(1m), .rcp(8), .cp(230f), .l(2.6n), .h(176k)) LossyInductor (p1, p2);
+endmodule
