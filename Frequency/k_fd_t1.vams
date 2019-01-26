@@ -25,6 +25,6 @@ module k_fd_t1 (vout, vin);
             trig = (2*count >= ratio);
         end
 
-        V(vout) <+ transition( n ? vh : vl, id, td);
+        V(vout) <+ transition( trig ? vh : vl, id, td);
     end
 endmodule
