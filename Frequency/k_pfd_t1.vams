@@ -1,0 +1,51 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_pfd_t1 (iout, vref, vinv);
+    output iout;                      // Output Current
+    electrical iout;
+    input vref;                       // Input positive voltage
+    input vinv;                       // Input inverted voltage
+    voltage vref, vinv;
+
+    parameter real imax = 100u;       // maximum output Current
+    parameter real vh = +1;           // input voltage in high state
+    parameter real vl = -1;           // input voltage in low state
+    parameter real th = (vh+vl)/2;    // input threshold voltage
+    parameter integer edg = +1 from [-1:1] exclude 0;
+    parameter real id = 0 from [0:inf);       // Average delay from input to output
+    parameter real td = 1n from (0:inf);      // transitional delay
+    parameter real rclamp = 100 from (0:inf); // output clamp resistance
+    parameter real gmin = 1p;                 // output min conductance
+
+    integer state;
+
+    analog begin
+        // Phase detector
+        @(cross(V(vref) - th, edg)) begin
+            if(state > -1) begin
+                state = state - 1;
+            end
+        end
+        @(cross(V(vinv) - th, edg)) begin
+            if(state < 1) begin
+                state = state + 1;
+            end
+        end
+        // End Phase detector
+
+        // Charge Pump
+        I(iout) <+ transition( iout*state, id, td);
+        // End Charge Pump
+
+        // Output Clamp
+        if (V(iout) > vh) begin
+            I(iout) <+ (V(iout) - vh)/rclamp;
+        end else if (V(iout) < vl) begin
+            I(iout) <+ (V(iout) - vl)/rclamp;
+        end
+        // End Output Clamp
+
+        I(iout) <+ gmin*V(iout);
+    end
+endmodule
