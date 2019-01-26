@@ -9,6 +9,6 @@ parameter real r = 0 from [0:inf); // Parasitic Resistance
 branch (p1, p2) ind;
 
 analog begin
-    V(ind) <+ l*ddt(I(cap)) + r*I(ind);
+    V(ind) <+ l*ddt(I(ind)) + r*I(ind);
 end
 endmodule
