@@ -1,0 +1,71 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_trackhold_t1 (Pout, Nout, Pin, Nin, clk);
+    input Pin, Nin;
+    input clk;
+    output Pout, Nout;
+    electrical Pin, Nin, Pout, Nout;
+    voltage clk;
+
+    parameter real geff = 1e-12;                        // eff. conductance
+    parameter real th = 0 from [0:inf);                 // Input threshold
+    paramter real tdelay = 0 from [0:period);           // Tracking delay
+    parameter integer edg = +1 from [-1:1] exclude 0;
+
+    integer n, timing;
+    real tp0, tp1, tstart, tstop;
+    real period;                                        // Tracking period
+    real aperture;                                      // aperture
+    real tc;                                            // titrating cap.
+
+    electrical hold;                                    // Buffer
+    branch (Pin, Nin) in;
+    branch (Pout, Nout) out;
+
+    analog begin
+        // period calculation
+        tp1 = last_crossing(V(in) - th, edg);
+        @(cross(V(in) - th, edg)) begin
+            if(timing) begin
+                period = tp1-tp0;
+                $strobe("period = %rs (measured at %rs)\n", period, $abstime);
+                aperture = period/100;
+                $strobe("aperture = %rs (measured at %rs)\n",
+                          aperture, $abstime);
+                tc = aperture/100;
+                $strobe("tc = %rF (measured at %rs)\n", tc, $abstime);
+            end
+            tp0 = tp1;
+            timing = 1;
+        end
+        // aperture begin time
+        n = ($abstime - tdelay + aperture)/period;
+        tstart = n*period + tdelay - aperture;
+        @(timer(tstart)) begin
+            ;
+        end
+        // aperture end time
+        n = ($abstime - tdelay)/period;
+        tstop = n*period + tdelay;
+        @(timer(tstop)) begin
+            ;
+        end
+        // Bound time step
+        if (($abstime >= tstop - aperture) && ($abstime < tstop)) begin
+            $bound_step(tc);
+        end else begin
+            $bound_step(period/5);
+        end
+        // Implement switch with effective series resistance of 1ohm
+        if(($abstime > tstop - aperture) && ($abstime <= tsstop)) begin
+            I(hold) <+ V(hold) - V(in);
+        end else begin
+            I(hold) <+ geff*V(hold);
+        end
+        // Implement titrating capacitor
+        I(hold) <+ tc*ddt(V(hold));
+        // Output Buffer
+        V(out) <+ V(hold);
+    end
+endmodule
