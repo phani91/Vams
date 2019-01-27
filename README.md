@@ -136,6 +136,10 @@ Index:
 		-> Ideal Sample and Hold for external clock
 		-> Ideal Track and Hold for internal periods with no hidden state
 		-> Ideal Track and Hold for external clock with no hidden state
+		-> Current Limited Voltage Regulator
+		-> Random Bitstream Generator
+		-> Comparator
+		-> nxn Comparator
 		->
 		->
 		
