@@ -1,0 +1,32 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_samplehold_t1 (Pout, Nout, Pin, Nin);
+    input Pin, Nin;
+    output Pout, Nout;
+    voltage Pin, Nin, Pout, Nout;
+
+    parameter real period = 1 from (0:inf);         // Sampling Period
+    paramter real toff = 0 from [0:inf);            // Sampling offset
+    parameter real id = 0 from [0:inf);             // inertial delay
+    parameter real td = period/100 from (0:inf);    // transitional delay
+
+    integer n;
+    real tstop, save;
+    branch (Pin, Nin) in;
+    branch (Pout, Nout) out;
+
+    analog begin
+        // sample time
+        n = ($abstime - toff)/period;
+        tstop = n*period + toff;
+
+        // Sampling input
+        @(initial_step or timer(tstop)) begin
+            save = V(in);
+        end
+
+        // output
+        V(out) <+ transition(save, id, td);
+    end
+endmodule

@@ -1,0 +1,28 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_samplehold_t2 (Pout, Nout, Pin, Nin, clk);
+    input Pin, Nin;
+    input clk;
+    output Pout, Nout;
+    voltage clk, Pin, Nin, Pout, Nout;
+
+    parameter real th = 0 from [0:inf);             // Input threshold
+    parameter real id = 0 from [0:inf);             // inertial delay
+    parameter real td = 0 from [0:inf);             // transitional delay
+    parameter integer edg = +1 from [-1:1] exclude 0;
+
+    real save;
+    branch (Pin, Nin) in;
+    branch (Pout, Nout) out;
+
+    analog begin
+        // Sampling input
+        @(initial_step or cross(V(in) - th, edg)) begin
+            save = V(in);
+        end
+
+        // output
+        V(out) <+ transition(save, id, td);
+    end
+endmodule

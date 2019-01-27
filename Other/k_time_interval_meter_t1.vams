@@ -1,0 +1,40 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_time_interval_t1 (arm, trigger);
+    input arm, trigger;
+    voltage arm, trigger;
+
+    parameter real th = 0 from [0:inf);             // Input threshold
+    parameter integer edg = +1 from [-1:1] exclude 0;
+
+    integer count, armed;
+    real t0, t1, sum, mean, tdiff;
+
+    analog begin
+        t0 = last_crossing(V(arm) - th, edg);
+        @(cross(V(arm) - th, edg)) begin
+            armed = 1;
+            t1 = last_crossing(V(trigger) - th, edg);
+        end
+
+        @(cross(V(trigger) - th, edg)) begin
+            if (armed) begin
+                armed = 0;
+                count = count+1;
+                tdiff = t1 - t0;
+                sum = sum + tdiff;
+            end
+        end
+
+        @(final_step) begin
+            $strobe("time interval measurements = %d\n", count);
+            if (count) begin
+                mean = sum/count;
+                $strobe("mean time interval = %g\n", mean);
+            end else
+                $strobe("time interval measurement failed\n");
+            end
+        end
+    end
+endmodule
