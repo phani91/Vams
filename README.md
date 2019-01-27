@@ -128,10 +128,12 @@ Index:
 		->
 		
 (X). Other - Folder contains other modules
-		->
-		->
-		->
-		->
+		-> Period Meter
+		-> Time Interval Meter
+		-> Delay Meter
+		-> Breakdown Generator
+		-> Ideal Sample and Hold for internal periods
+		-> Ideal Sample and Hold for external clock
 		->
 		->
 		
