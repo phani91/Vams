@@ -1,0 +1,64 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_vco_t2 (vout, vin);
+    output vout;
+    input vin;
+    voltage vin, vout;
+
+    parameter real vmin = 0;                        // input voltage for fmin
+    parameter real vmax = vmin+1 from (vmin:inf);   // input voltage for fmax
+    parameter real fmin = 1 from (0:inf);           // min output frequency
+    parameter real fmax = 2*fmin from (fmin:inf);   // max output frequency
+    parameter real vh = 1;                          // high output voltage
+    parameter real vl = -1;                         // low output voltage
+    parameter real id = 0 from [0:inf);             // inertial delay
+    parameter real td = 0.01/fmax from (0:inf);     // transitional delay
+    parameter real ttol = 1u/fmax from (0:1/fmax);  // time tolerance
+    parameter real a_jitter = 0 from [0:0.25/fmax); // white accumul. jitter
+    parameter real period = 2 from [2:inf);         // jitter application times
+    parameter real i_ic = 0.0;                      // integral initial cond.
+    parameter real i_mod = 1.0;                     // integral modulus
+    parameter real i_off = -0.5;                    // integral offset
+    parameter integer edg = +1 from [-1:1] exclude 0;
+
+    real freq, phase, async_delta, async_jitter;
+    integer n, a_s, a_m, a_sd;
+
+    analog begin
+        @(initial_step) begin
+            a_s = 676;
+            a_m = 0;
+            a_sd = 1;
+            async_jitter = sqrt(period)*a_jitter;
+        end
+        // input voltage frequency calculation
+        freq = fmin + (((V(vin) - vmin)*(fmax-fmin))/(vmax-vmin));
+
+        // frequency bound
+        if (freq > fmax) begin
+            freq = fmax;
+        end
+        if (freq < fmin) begin
+            freq = fmin;
+        end
+
+        // Adding phase noise
+        freq = freq/(1+(async_delta*freq));
+
+        // time-step bound
+        $bound_step(0.6/freq);
+
+        // phase calculation
+        phase = 2*`M_PI*idtmod(freq, i_ic, i_mod, i_off);
+
+        // switching points
+        @(cross(phase + `M_PI/2, edg, ttol) or
+          cross(phase - `M_PI/2, edg, ttol)) begin
+            async_delta = async_jitter*$rdist_normal(a_s, a_m, a_sd);
+            n = ((phase >= -`M_PI/2) && (phase < `M_PI/2));
+        end
+
+        V(vout) <+ transition( n ? vh : vl, id, td);
+    end
+endmodule
