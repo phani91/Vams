@@ -1,0 +1,25 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_comparator_t1 (greater, equal, lower, in1, in2);
+    input in1, in2;
+    output greater, equal, lower;
+    voltage in1, in2, greater, equal, lower;
+
+    parameter real id = 1n from [0:inf);          // inertial delay
+    parameter real td = 1n from (0:inf);          // transitional delay
+
+    real checks_g, checks_e, checks_l, ;
+
+    analog begin
+        checks_e = (V(in1) == V(in2)) ? 1 : 0;
+        @(cross(V(in1) - V(in2), 0) or cross(V(in2) - V(in1), 0)) begin
+            ;
+        end
+        checks_g = (V(in1) > V(in2)) ? 1 : 0;
+        checks_l = (V(in1) < V(in2)) ? 1 : 0;
+        V(greater) <+ transition( checks_g, id, td);
+        V(equal) <+ transition( checks_e, id, td);
+        V(lower) <+ transition( checks_l, id, td);
+    end
+endmodule
