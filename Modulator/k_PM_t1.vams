@@ -1,0 +1,22 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_PM_t1 (out, in);
+    input in;
+    output out;
+    voltage in, out;
+
+    parameter real freq = 1.0 from (0:inf);
+    parameter real pm_index = 1.0;
+
+    real phi, refs;
+
+    analog begin
+        refs = pm_index*V(in);
+        phi = `M_TWO_PI*freq*$abstime;
+        // Bound Time Step
+        $bound_step(0.05/freq);
+        // Phase Modulation
+        V(out) <+ cos(phi + refs);
+    end
+endmodule
