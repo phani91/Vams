@@ -9,7 +9,7 @@ module k_samplehold_t1 (Pout, Nout, Pin, Nin);
     parameter real period = 1 from (0:inf);         // Sampling Period
     paramter real toff = 0 from [0:inf);            // Sampling offset
     parameter real id = 0 from [0:inf);             // inertial delay
-    parameter real td = period/100 from (0:inf);    // transitional delay
+    parameter real td = period/100 from (0:period); // transitional delay
 
     integer n;
     real tstop, save;
