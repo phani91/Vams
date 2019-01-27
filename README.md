@@ -110,8 +110,10 @@ Index:
 		-> 
 		
 (VIII). Modulator - Folder contains modulator modules
-		->
-		->
+		-> Amplitude Modulator
+		-> Phase Modulator
+		-> Frequency Modulator
+		-> 16 Quadrature Amplitude Modulator
 		->
 		->
 		
