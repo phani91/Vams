@@ -1,0 +1,27 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_clv_regulator (out);
+    output out;
+    electrical out;
+
+    parameter real vmax = 0 from (0:inf);     // Maximum voltage
+    parameter real imax = 0 from (0:inf);     // Maximum current
+
+    real v, i;
+    integer drives;
+
+    analog begin
+        v = V(out);
+        i = -I(<out>);
+        @(cross((v-vmax)/vmax - (i-imax)/imax), 0) begin
+            ;
+        end
+        drives = ((v-vmax)/vmax > (i-imax)/imax));
+        if (drives) begin
+            V(out) <+ vmax;
+        end else begin
+            I(out) <+ imax;
+        end
+    end
+endmodule

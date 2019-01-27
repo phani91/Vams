@@ -1,0 +1,28 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_rand_bitstream (out);
+    output out;
+    electrical out;
+
+    parameter real start = 0.0 from [0:inf);        // Start
+    parameter real period = 1.0 from (0:inf);       // Period
+    parameter real id = 0 from [0:inf);             // inertial delay
+    parameter real td = period/100 from (0:period); // transitional delay
+    parameter integer seed = 0 from (-inf:inf);     // seed
+
+    integer x, y, checks;
+
+    analog begin
+        @(initial_step) begin
+            y = seed;
+        end
+
+        @(timer(start, period)) begin
+            checks = ($random(y) >= 0);
+            x = checks ? 1 : 0;
+        end
+
+        V(out) <+ transition( x, id, td);
+    end
+endmodule  
