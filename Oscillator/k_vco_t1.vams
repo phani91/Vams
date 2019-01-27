@@ -1,0 +1,52 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_vco_t1 (vout, vin);
+    output vout;
+    input vin;
+    voltage vin, vout;
+
+    parameter real vmin = 0;                        // input voltage for fmin
+    parameter real vmax = vmin+1 from (vmin:inf);   // input voltage for fmax
+    parameter real fmin = 1 from (0:inf);           // min output frequency
+    parameter real fmax = 2*fmin from (fmin:inf);   // max output frequency
+    parameter real vh = 1;                          // high output voltage
+    parameter real vl = -1;                         // low output voltage
+    parameter real id = 0 from [0:inf);             // inertial delay
+    parameter real td = 0.01/fmax from (0:inf);     // transitional delay
+    parameter real ttol = 1u/fmax from (0:1/fmax);  // time tolerance
+    parameter real i_ic = 0.0;                      // integral initial cond.
+    parameter real i_mod = 1.0;                     // integral modulus
+    parameter real i_off = -0.5;                    // integral offset
+    parameter integer edg = +1 from [-1:1] exclude 0;
+
+    real freq, phase;
+    integer n;
+
+    analog begin
+        // input voltage frequency calculation
+        freq = fmin + (((V(vin) - vmin)*(fmax-fmin))/(vmax-vmin));
+
+        // frequency bound
+        if (freq > fmax) begin
+            freq = fmax;
+        end
+        if (freq < fmin) begin
+            freq = fmin;
+        end
+
+        // time-step bound
+        $bound_step(0.6/freq);
+
+        // phase calculation
+        phase = 2*`M_PI*idtmod(freq, i_ic, i_mod, i_off);
+
+        // switching points
+        @(cross(phase + `M_PI/2, edg, ttol) or
+          cross(phase - `M_PI/2, edg, ttol)) begin
+            n = ((phase >= -`M_PI/2) && (phase < `M_PI/2));
+        end
+
+        V(vout) <+ transition( n ? vh : vl, id, td);
+    end
+endmodule
