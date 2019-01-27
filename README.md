@@ -90,18 +90,24 @@ Index:
 		->
 		
 (VI). Frequency - Folder contains frequency based models
-		->
-		->
-		->
-		->
-		->
+		-> Phase Frequency Detector
+		-> Noisy Phase Frequency Detector
+		-> Frequency Divider
+		-> Noisy Frequency Divider with Accumulating white jitter
+		-> Noisy Frequency Divider with Accumulating and Synchronous white jitter
+		-> Divide by N Noisy Frequency Divider with Accumulating and Synchronous white jitter
+		-> 
 		
 (VII). Oscillator - Folder contains oscillator modules
-		->
-		->
-		->
-		->
-		->
+		-> Voltage Controlled Oscillator
+		-> Voltage Controlled Oscillator, AMS model
+		-> Noisy Voltage Controlled Oscillator		
+		-> Noisy Differential Quadruple Voltage Controlled Oscillator
+		-> Noisy Differential Multiple Voltage Controlled Oscillator
+		-> Noisy Sinusoidal Wave Voltage Controlled Oscillator
+		-> Fixed Frequency Oscillator
+		-> Noisy Fixed Frequency Oscillator with accumulating white jitter
+		-> 
 		
 (VIII). Modulator - Folder contains modulator modules
 		->
