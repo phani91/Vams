@@ -1,0 +1,25 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_period_meter_t1 (in);
+    input in;
+    voltage in;
+
+    parameter real th = 0 from [0:inf);             // Input threshold
+    parameter integer edg = +1 from [-1:1] exclude 0;
+
+    integer timing;
+    real t0, t1;
+
+    analog begin
+        t1 = last_crossing(V(in) - th, edg);
+        @(cross(V(in) - th, edg)) begin
+            if(timing) begin
+                $strobe("period = %rs (measured at %rs)\n", t1-t0, $abstime);
+                $strobe("frequency = %rHz (measured at %rs)\n",
+                        1/(t1-t0), $abstime);
+            end
+            t0 = t1;
+            timing = 1;
+        end
+    endmodule
