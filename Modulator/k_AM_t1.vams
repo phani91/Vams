@@ -1,0 +1,22 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_AM_t1 (out, in);
+    input in;
+    output out;
+    voltage in, out;
+
+    parameter real freq = 1.0 from (0:inf);
+    parameter real am_index = 1.0;
+
+    real phi, refs;
+
+    analog begin
+        refs = 1+(am_index*V(in));
+        phi = `M_TWO_PI*freq*$abstime;
+        // Bound Time Step
+        $bound_step(0.05/freq);
+        // Amplitude Modulation
+        V(out) <+ refs*cos(phi);
+    end
+endmodule
