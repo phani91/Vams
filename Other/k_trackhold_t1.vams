@@ -1,0 +1,51 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_trackhold_t1 (Pout, Nout, Pin, Nin);
+    input Pin, Nin;
+    output Pout, Nout;
+    electrical Pin, Nin, Pout, Nout;
+
+    parameter real period = 1 from (0:inf);                 // Tracking Period
+    paramter real tdelay = 0 from [0:period);               // Tracking delay
+    parameter real aperture = period/100 from (0:period/2); // Aperture
+    parameter real tc = aperture/100 from (0:aperture);     // titrating cap.
+    parameter real geff = 1e-12;                            // eff. conductance
+
+    integer n;
+    real tstart, tstop;
+    
+    electrical hold;                                        // Buffer
+    branch (Pin, Nin) in;
+    branch (Pout, Nout) out;
+
+    analog begin
+        // aperture begin time
+        n = ($abstime - tdelay + aperture)/period;
+        tstart = n*period + tdelay - aperture;
+        @(timer(tstart)) begin
+            ;
+        end
+        // aperture end time
+        n = ($abstime - tdelay)/period;
+        tstop = n*period + tdelay;
+        @(timer(tstop)) begin
+            ;
+        end
+        // Bound time step
+        if (($abstime >= tstop - aperture) && ($abstime < tstop)) begin
+            $bound_step(tc);
+        end else begin
+            $bound_step(period/5);
+        end
+        // Implement switch with effective series resistance of 1ohm
+        if(($abstime > tstop - aperture) && ($abstime <= tsstop)) begin
+            I(hold) <+ V(hold) - V(in);
+        end else begin
+            I(hold) <+ geff*V(hold);
+        end
+        // Implement titrating capacitor
+        I(hold) <+ tc*ddt(V(hold));
+        // Output Buffer
+        V(out) <+ V(hold);
+    end
