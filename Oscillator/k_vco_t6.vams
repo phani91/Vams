@@ -1,0 +1,23 @@
+`include "disciplines.vams"
+`include "constants.vams"
+`include timescale 1ns/1ps
+
+module k_vco_t6 (out, Pin, Nin);
+    input Pin, Nin;
+    electrical Pin, Nin;
+    output out;
+    logic out;
+    reg out;
+
+    parameter real f0 = 100k from (0:inf);        // Center frequency
+    parameter real gain_vco = 10k;                // gain (Hz/V)
+
+    real vin;
+
+    initial out = 0;
+
+    always begin
+        vin = V(Pin, Nin);
+        #(1e9 / 2*(f0 + (gain_vco*vin))) out = ~out;
+    end
+    endmodule
