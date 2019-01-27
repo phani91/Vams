@@ -134,6 +134,8 @@ Index:
 		-> Breakdown Generator
 		-> Ideal Sample and Hold for internal periods
 		-> Ideal Sample and Hold for external clock
+		-> Ideal Track and Hold for internal periods with no hidden state
+		-> Ideal Track and Hold for external clock with no hidden state
 		->
 		->
 		
