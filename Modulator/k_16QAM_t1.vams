@@ -1,0 +1,36 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_16QAM_t1 (out, in);
+    input [0:3] in;
+    output out;
+    voltage [0:3] in;
+    voltage out;
+
+    parameter real freq = 1.0 from (0:inf);
+    parameter real qam_index = 1.0;
+    parameter real th = 2.5;                    // Input threshold
+    parameter real id = 0 from [0:inf);         // inertial delay
+    localparam real td = 1/freq;                // transitional delay
+
+    real x, y, refx, refy, phi;
+    integer row, col;
+
+    analog begin
+        row = 2* (V(in[3]) > th) + (V(in[2]) > th);
+        col = 2* (V(in[1]) > th) + (V(in[0]) > th);
+
+        x = transition( row-1.5, id, td);
+        y = transition( col-1.5, id, td);
+
+        phi = `M_TWO_PI*freq*$abstime;
+        refx = qam_index*x*cos(phi);
+        refy = qam_index*y*sin(phi);
+
+        // Bound Time Step
+        $bound_step(0.05/freq);
+
+        //16 QAM
+        V(out) <+ refx + refy;
+    end
+endmodule

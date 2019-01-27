@@ -1,0 +1,25 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_FM_t1 (out, in);
+    input in;
+    output out;
+    voltage in, out;
+
+    parameter real freq = 1.0 from (0:inf);
+    parameter real fm_index = 1.0;
+    parameter real i_ic = 0.0;                      // integral initial cond.
+    parameter real i_mod = 1.0;                     // integral modulus
+    parameter real i_off = -0.5;                    // integral offset
+
+    real phi, refs;
+
+    analog begin
+        refs = `M_TWO_PI*idtmod( fm_index*V(in), i_ic, i_mod, i_off);
+        phi = `M_TWO_PI*freq*$abstime;
+        // Bound Time Step
+        $bound_step(0.05/freq);
+        // Frequency Modulation
+        V(out) <+ cos(phi + refs);
+    end
+endmodule
