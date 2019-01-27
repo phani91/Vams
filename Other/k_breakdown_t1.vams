@@ -1,0 +1,20 @@
+`include "disciplines.vams"
+`include "constants.vams"
+
+module k_breakdown_t1 (in);
+    input in;
+    voltage in;
+
+    parameter real th = 10.0 from (0:inf);             // Input threshold
+
+    integer given;
+
+    analog begin
+        @(above(V(in) - th)) begin
+            if(!given) begin
+                $strobe("Warning: breakdown threshold exceeded
+                          at %m at %gs\n", $abstime);
+                given = 1;
+            end
+        end
+    endmodule
