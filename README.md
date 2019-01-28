@@ -118,7 +118,7 @@ Index:
 		->
 		
 (IX). Semiconductor - Folder contains semiconductor modules
-		->
+		-> Simple Junction Diode
 		->
 		->
 		->
@@ -145,5 +145,4 @@ Index:
 		->
 		->
 		
-(XI). Memristor - Folder contains Memristor modules
 
