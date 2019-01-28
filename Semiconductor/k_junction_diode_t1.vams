@@ -6,6 +6,7 @@ module k_junction_diode_t1 (p1, p2);
     electrical p1, p2;
 
     parameter real is = 10f from (o:inf);    // Saturation Current
+    parameter real r = 0 from [0:inf);       // series resistance
     parameter real tf = 0 from [0:inf);      // Forward Transit Time
     parameter real cj = 0 from [0:inf);      // Zero bias junction capacitance
     parameter real vphi = 0.7 exclude 0;     // Built in junction potential
@@ -15,7 +16,7 @@ module k_junction_diode_t1 (p1, p2);
     real qd;
 
     analog begin
-        I(res) <+ is*(limexp(V(res)/$vt) - 1);
+        I(res) <+ is*(limexp((V(res)-r*I(res))/$vt) - 1);
         qd = tf*I(res) - 2*cj*vphi*sqrt(1-(V(cap)/vphi));
         I(cap) <+ ddt(qd);
     end
