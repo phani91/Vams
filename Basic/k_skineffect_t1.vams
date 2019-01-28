@@ -23,8 +23,8 @@ module k_skineffect_t1 (p1, p2);
             m = pow(fr, 1.0/lumps);             // frequency span of each lump
             for (i = 0; i < 2*lumps; i = i+1) begin
                 if (i%2 == 0) begin
-                    zeroes[i] = (f0*pow(m, (i - (3.0/4.0))));
-                    poles[i] = (f0*pow(m, (i-(1.0/4.0))));
+                    zeroes[i] = -(f0*pow(m, (i - (3.0/4.0))));
+                    poles[i] = -(f0*pow(m, (i-(1.0/4.0))));
                 end else begin
                     zeroes[i] = 0;
                     poles[i] = 0;
