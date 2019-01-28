@@ -10,6 +10,7 @@ module k_Vsrc_t4 (p1, p2);
     branch (p1, p2) out;
     
     analog begin
-        V(out) <+ ampl*cos(`M_TWO_PI*freq);
+        V(out) <+ (ampl*sin(`M_PI*freq*$abstime));
+        $bound_step(0.1/freq);
     end
     endmodule

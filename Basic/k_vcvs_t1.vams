@@ -10,6 +10,6 @@ branch (pin, nin) in;
 parameter real gain = 1;
 
 analog begin
-	V(out) <+ gain*I(in);
+	V(in) <+ gain*I(out);
 end
 endmodule
