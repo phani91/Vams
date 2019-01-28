@@ -1,0 +1,15 @@
+`include "disciplines.vams";
+`include "constants.vams";
+
+module k_Vsrc_t4 (p1, p2);
+    electrical p1, p2;
+    
+    parameter real ampl = 1.0 from [0:inf);
+    parameter real freq = 1.0 from [0:inf);
+    
+    branch (p1, p2) out;
+    
+    analog begin
+        V(out) <+ ampl*cos(`M_TWO_PI*freq);
+    end
+    endmodule
