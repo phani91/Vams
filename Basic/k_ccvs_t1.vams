@@ -11,4 +11,5 @@ parameter real gain = 1;
 
 analog begin
 	I(out) <+ gain*V(in);
+end
 endmodule

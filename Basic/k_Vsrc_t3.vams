@@ -10,4 +10,5 @@ branch (p1, p2) src;
 
 analog begin
     V(src) <+ dc + ac_stim( "ac", mag ) + r*I(src);
+end
 endmodule
